@@ -5,7 +5,7 @@
 - vue-cli进行项目初始话和管理
 - Babel编译、webpack打包
 - vue进行项目开发
-- 语法规范：ESLint语法检查
+- 语法规范：ESLint语法检查、样式使用scss
 - Nginx部署上线
 - 服务器端，Node.js实现服务器存储文档
 

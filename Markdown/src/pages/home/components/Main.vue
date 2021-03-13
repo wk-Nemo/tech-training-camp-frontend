@@ -1,4 +1,4 @@
-<template>
+s<template>
   <div class="main">
     <div class="main-toolbar">
       <div class="tool-left">
@@ -6,37 +6,67 @@
           <span class="iconfont tool-icon">&#xe609;</span>
         </div>
         <div class="iconbox">
-          <span class="iconfont tool-icon">&#xe606;</span>
+          <span
+           class="iconfont tool-icon"
+           @click="addStrong"
+          >&#xe606;</span>
         </div>
         <div class="iconbox">
-          <span class="iconfont tool-icon">&#xe60d;</span>
+          <span
+           class="iconfont tool-icon"
+           @click="addItalic"
+          >&#xe60d;</span>
         </div>
         <div class="iconbox">
-          <span class="iconfont tool-icon">&#xe715;</span>
+          <span
+           class="iconfont tool-icon"
+           @click="addQuote"
+          >&#xe715;</span>
         </div>
         <div class="iconbox">
-          <span class="iconfont tool-icon">&#xe701;</span>
+          <span
+           class="iconfont tool-icon"
+           @click="addUrl"
+          >&#xe701;</span>
         </div>
         <div class="iconbox">
           <span class="iconfont tool-icon">&#xe6f5;</span>
         </div>
         <div class="iconbox">
-          <span class="iconfont tool-icon">&#xe69f;</span>
+          <span
+           class="iconfont tool-icon"
+           @click="addCode"
+          >&#xe69f;</span>
         </div>
         <div class="iconbox">
-          <span class="iconfont tool-icon">&#xe71a;</span>
+          <span
+           class="iconfont tool-icon"
+           @click="addUnorderList"
+          >&#xe71a;</span>
         </div>
         <div class="iconbox">
-          <span class="iconfont tool-icon">&#xe6f0;</span>
+          <span
+           class="iconfont tool-icon"
+           @click="addOrderList"
+          >&#xe6f0;</span>
         </div>
         <div class="iconbox">
-          <span class="iconfont tool-icon">&#xe610;</span>
+          <span
+           class="iconfont tool-icon"
+           @click="addLineThrough"
+          >&#xeaf0;</span>
         </div>
         <div class="iconbox">
-          <span class="iconfont tool-icon">&#xeaf0;</span>
+          <span
+           class="iconfont tool-icon"
+           @click="addTask"
+          >&#xe610;</span>
         </div>
         <div class="iconbox">
-          <span class="iconfont tool-icon">&#xe667;</span>
+          <span
+           class="iconfont tool-icon"
+           @click="addForm"
+          >&#xe667;</span>
         </div>
       </div>
       <div class="tool-right"></div>
@@ -59,6 +89,7 @@
 
 <script>
 import marked from 'marked'
+import range from '../../../../static/js/range'
 marked.setOptions({
   renderer: new marked.Renderer(),
   gfm: true,
@@ -80,6 +111,207 @@ export default {
       inputContent: ''
     }
   },
+  methods: {
+    addStrong: function () {
+      // 判断光标位置,添加**
+      let dom = document.querySelector('.editor')
+      let value = dom.value
+      let position = range.getCursortPosition(dom)
+      let flag = 0
+      // 判断光标在第几行
+      let arrayf = value.split('')
+      for (let i = 0; i < position; i++) {
+        if (arrayf[i] === '\n' && i !== position) flag++
+      }
+      // 初始话第二个数组
+      let arrays = value.split('\n')
+      let str = arrays[flag]
+      let len = str.length - 1
+      // 判断第flag+1行是否已经斜体
+      if (str[0] === '*' && str[1] === '*' && str[len] === '*' && str[len - 1] === '*') {
+        arrays[flag] = str.slice(2, len - 1)
+      } else {
+        arrays[flag] = '**' + str + '**'
+      }
+      this.inputContent = arrays.join('\n')
+      range.setCaretPosition(dom, position)
+    },
+    addItalic: function () {
+      // 判断光标位置,添加**
+      let dom = document.querySelector('.editor')
+      let value = dom.value
+      let position = range.getCursortPosition(dom)
+      let flag = 0
+      // 判断光标在第几行
+      let arrayf = value.split('')
+      for (let i = 0; i < position; i++) {
+        if (arrayf[i] === '\n' && i !== position) flag++
+      }
+      // 初始话第二个数组
+      let arrays = value.split('\n')
+      let str = arrays[flag]
+      let len = str.length - 1
+      // 判断第flag+1行是否已经斜体
+      if (str[0] === '*' && str[len] === '*') {
+        arrays[flag] = str.slice(1, len)
+      } else {
+        arrays[flag] = '*' + str + '*'
+      }
+      this.inputContent = arrays.join('\n')
+      range.setCaretPosition(dom, position)
+    },
+    addQuote: function () {
+      // 判断光标位置
+      let dom = document.querySelector('.editor')
+      let value = dom.value
+      let position = range.getCursortPosition(dom)
+      let flag = 0
+      // 判断光标在第几行
+      let arrayf = value.split('')
+      for (let i = 0; i < position; i++) {
+        if (arrayf[i] === '\n' && i !== position) flag++
+      }
+      // 初始话第二个数组
+      let arrays = value.split('\n')
+      let str = arrays[flag]
+      // 判断第flag+1行是否已经斜体
+      arrays[flag] = '> ' + str
+      this.inputContent = arrays.join('\n')
+      range.setCaretPosition(dom, position)
+    },
+    addUrl: function () {
+      // 判断光标位置
+      let dom = document.querySelector('.editor')
+      let value = dom.value
+      let position = range.getCursortPosition(dom)
+      // 判断光标在第几行
+      let arrayf = value.split('')
+      // 判断第flag+1行是否已经斜体
+      if (arrayf[position]) {
+        arrayf.splice(position, 0, '[](url)')
+      } else {
+        arrayf[position] = '[](url)'
+      }
+      this.inputContent = arrayf.join('')
+      range.setCaretPosition(dom, position)
+    },
+    addCode: function () {
+      let dom = document.querySelector('.editor')
+      let value = dom.value
+      let position = range.getCursortPosition(dom)
+      let flag = 0
+      // 判断光标在第几行
+      let arrayf = value.split('')
+      for (let i = 0; i < position; i++) {
+        if (arrayf[i] === '\n' && i !== position) flag++
+      }
+      // 初始话第二个数组
+      let arrays = value.split('\n')
+      // 判断第flag+1行是否已经斜体
+      if (arrays[flag]) {
+        arrays.splice(flag + 1, 0, '```js', '```')
+      } else {
+        arrays.splice(flag, 0, '```js', '```')
+      }
+      this.inputContent = arrays.join('\n')
+      range.setCaretPosition(dom, position)
+    },
+    addUnorderList: function () {
+      let dom = document.querySelector('.editor')
+      let value = dom.value
+      let position = range.getCursortPosition(dom)
+      let flag = 0
+      // 判断光标在第几行
+      let arrayf = value.split('')
+      for (let i = 0; i < position; i++) {
+        if (arrayf[i] === '\n' && i !== position) flag++
+      }
+      // 初始话第二个数组
+      let arrays = value.split('\n')
+      let str = arrays[flag]
+      // 判断第flag+1行是否已经斜体
+      arrays[flag] = '- ' + str
+      this.inputContent = arrays.join('\n')
+      range.setCaretPosition(dom, position)
+    },
+    addOrderList: function () {
+      let dom = document.querySelector('.editor')
+      let value = dom.value
+      let position = range.getCursortPosition(dom)
+      let flag = 0
+      // 判断光标在第几行
+      let arrayf = value.split('')
+      for (let i = 0; i < position; i++) {
+        if (arrayf[i] === '\n' && i !== position) flag++
+      }
+      // 初始话第二个数组
+      let arrays = value.split('\n')
+      let str = arrays[flag]
+      arrays[flag] = '1. ' + str
+      this.inputContent = arrays.join('\n')
+      range.setCaretPosition(dom, position)
+    },
+    addLineThrough: function () {
+      // 判断光标位置,添加**
+      let dom = document.querySelector('.editor')
+      let value = dom.value
+      let position = range.getCursortPosition(dom)
+      let flag = 0
+      // 判断光标在第几行
+      let arrayf = value.split('')
+      for (let i = 0; i < position; i++) {
+        if (arrayf[i] === '\n' && i !== position) flag++
+      }
+      // 初始话第二个数组
+      let arrays = value.split('\n')
+      let str = arrays[flag]
+      let len = str.length - 1
+      // 判断第flag+1行是否已经斜体
+      if (str[0] === '~' && str[1] === '~' && str[len] === '~' && str[len - 1] === '~') {
+        arrays[flag] = str.slice(2, len - 1)
+      } else {
+        arrays[flag] = '~~' + str + '~~'
+      }
+      this.inputContent = arrays.join('\n')
+      range.setCaretPosition(dom, position)
+    },
+    addTask: function () {
+      let dom = document.querySelector('.editor')
+      let value = dom.value
+      let position = range.getCursortPosition(dom)
+      // 判断光标在第几行
+      let arrayf = value.split('')
+      // 判断第flag+1行是否已经斜体
+      if (arrayf[position]) {
+        arrayf.splice(position, 0, '- [ ] ')
+      } else {
+        arrayf[position] = '- [ ] '
+      }
+      this.inputContent = arrayf.join('')
+      range.setCaretPosition(dom, position)
+    },
+    addForm: function () {
+      let dom = document.querySelector('.editor')
+      let value = dom.value
+      let position = range.getCursortPosition(dom)
+      let flag = 0
+      // 判断光标在第几行
+      let arrayf = value.split('')
+      for (let i = 0; i < position; i++) {
+        if (arrayf[i] === '\n' && i !== position) flag++
+      }
+      // 初始话第二个数组
+      let arrays = value.split('\n')
+      // 判断第flag+1行是否已经斜体
+      if (arrays[flag]) {
+        arrays.splice(flag + 1, 0, '| 标题 |  |', '| --- | --- |', '|  |  |')
+      } else {
+        arrays.splice(flag, 0, '| 标题 |  |', '| --- | --- |', '|  |  |')
+      }
+      this.inputContent = arrays.join('\n')
+      range.setCaretPosition(dom, position)
+    }
+  },
   computed: {
     compiledMarkdown: function () {
       return marked(this.inputContent, {
@@ -89,9 +321,7 @@ export default {
   },
   watch: {
     inputContent: function () {
-      console.log(marked(this.inputContent, {
-        sanitize: true
-      }))
+      // console.log(this.inputContent)
     }
   }
 }

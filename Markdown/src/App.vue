@@ -11,7 +11,14 @@ export default {
 </script>
 
 <style>
+html{
+  overflow-x: hidden;
+  height: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
 body{
+  margin: 0;
+  padding: 0;
   height: 100%;
 }
 #app{

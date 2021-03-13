@@ -42,15 +42,58 @@
       <div class="tool-right"></div>
     </div>
     <div class="main-body">
-      <div class="bytemd-editor"></div>
-      <div class="bytemd-preview"></div>
+      <div class="bytemd-editor">
+        <textarea
+         class="editor"
+         v-model="inputContent"
+        ></textarea>
+      </div>
+      <div
+       class="bytemd-preview"
+       v-html="compiledMarkdown"
+      >
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import marked from 'marked'
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: false,
+  pedantic: false,
+  sanitize: true,
+  smartLists: true,
+  smartypants: false
+  // highlight: function(code) {
+  //     return hljs.highlightAuto(code).value
+  // }
+})
+
 export default {
-  name: 'HomeMain'
+  name: 'HomeMain',
+  data () {
+    return {
+      inputContent: ''
+    }
+  },
+  computed: {
+    compiledMarkdown: function () {
+      return marked(this.inputContent, {
+        sanitize: true
+      })
+    }
+  },
+  watch: {
+    inputContent: function () {
+      console.log(marked(this.inputContent, {
+        sanitize: true
+      }))
+    }
+  }
 }
 </script>
 
@@ -82,15 +125,33 @@ export default {
     width: 100%;
     height: 100%;
     display: flex;
+    overflow: hidden;
     .bytemd-editor{
       width: 50%;
       height: 100%;
+      padding: 20px;
       background: rgb(248,249,250);
       border-right: 1px solid #ddd;
+      .editor{
+        font-size: 17px;
+        background: rgb(248,249,250);
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        line-height:1.5;
+        font-family:tahoma,arial,"Hiragino Sans GB",simsun,sans-serif;
+        vertical-align:middle;
+        overflow: auto;
+        resize: vertical;
+        outline: 0 none;
+        border: none;
+      }
     }
     .bytemd-preview{
       width: 50%;
       height: 100%;
+      padding: 20px;
     }
   }
 }

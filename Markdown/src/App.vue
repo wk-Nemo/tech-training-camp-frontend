@@ -64,6 +64,10 @@ th{
   min-width: 100px;
   min-height: 100px;
 }
+p{
+  margin: 0 !important;
+  padding: 0;
+}
 #app{
   height: 100%;
 }
